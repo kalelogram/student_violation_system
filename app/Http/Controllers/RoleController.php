@@ -27,8 +27,9 @@ class RoleController extends Controller
     if ($role === 'guard') {
         return redirect()->route('guard.login');
     } elseif ($role === 'admin') {
+        return redirect()->route('admin.login');
         // later: add admin login route
-        return back()->with('error', 'Admin login not yet available.');
+        //return back()->with('error', 'Admin login not yet available.');
     } else {
         return back()->with('error', 'Invalid role selection.');
     }
