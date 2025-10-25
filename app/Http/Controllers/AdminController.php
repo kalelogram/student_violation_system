@@ -41,4 +41,6 @@ class AdminController extends Controller
         session()->forget('admin_logged_in');
         return redirect()->route('admin.login');
     }
+
+    
 }

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Login Selection | PRMSU Gate System</title>
+  <title>Admin Login</title>
   <style>
     * {
       margin: 0;
@@ -18,16 +17,15 @@
       align-items: center;
       justify-content: center;
       color: white;
-      overflow: hidden;
     }
 
     .container {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       border-radius: 20px;
       padding: 40px;
       text-align: center;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
       width: 350px;
       animation: fadeIn 1s ease;
     }
@@ -38,49 +36,58 @@
       letter-spacing: 0.5px;
     }
 
-    .role-btn {
-      display: block;
+    input[type="password"] {
       width: 100%;
-      background: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      background: #f4c542;
       color: #004aad;
       border: none;
       border-radius: 12px;
-      padding: 14px;
-      margin: 10px 0;
-      font-size: 1rem;
+      padding: 12px;
       font-weight: 600;
+      font-size: 1rem;
       cursor: pointer;
       transition: all 0.3s ease;
     }
 
-    .role-btn:hover {
+    button:hover {
       transform: scale(1.05);
-      background: #ffa200ff;
-      color: white;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      background: #004aad;
+      color: #fff;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .error {
+      color: #ff8080;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      animation: fade 0.4s ease;
     }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    .footer {
-      margin-top: 15px;
-      font-size: 0.85rem;
-      opacity: 0.8;
-    }
   </style>
 </head>
-
 <body>
-  <div class="login-selection">
-    <h2>Welcome to PRMSU Student Violation Record System</h2>
-
-    <a href="{{ route('admin.login') }}" class="btn btn-primary">Admin</a>
-    <a href="{{ route('guard.login') }}" class="btn btn-secondary">Guard</a>
-
-    <p>President Ramon Magsaysay State University</p>
-</div>
+  <form method="POST" action="{{ route('admin.login.submit') }}">
+      @csrf
+      <h2>Admin Login</h2>
+      <input type="password" name="password" placeholder="Enter password..." required>
+      <button type="submit">Login</button>
+  </form>
+  @if(session('error'))
+      <p style="color:red;">{{ session('error') }}</p>
+  @endif
 </body>
 </html>

@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logs', function (Blueprint $table) {
-            $table->id();
+        Schema::connection('mysql')->create('violationtbl', function (Blueprint $table) {
+            $table->id('violation_id');
+            $table->foreignId('student_no');
+            $table->string('violation');
+            $table->string('description');
+            $table->string('remarks');
             $table->timestamps();
         });
     }
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('logs');
+        Schema::dropIfExists('violationtbl');
     }
 };

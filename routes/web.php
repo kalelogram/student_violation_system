@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\GuardController;
@@ -17,15 +18,22 @@ Route::get('/', [RoleController::class, 'index'])->name('home');
 Route::post('/select-role', [RoleController::class, 'selectRole'])->name('select-role');
 
 // Guard routes
-Route::get('/guard/login', [GuardController::class, 'showLogin'])->name('guard.login');
-Route::post('/guard/login', [GuardController::class, 'login'])->name('guard.login.post');
-Route::get('/guard/dashboard', [GuardController::class, 'dashboard'])->name('guard.dashboard');
+//Route::get('/guard/login', [GuardController::class, 'showLogin'])->name('guard.login');
+//Route::post('/guard/login', [GuardController::class, 'login'])->name('guard.login.post');
+//Route::get('/guard/dashboard', [GuardController::class, 'dashboard'])->name('guard.dashboard');
+Route::get('/guard/login', [AuthController::class, 'showGuardLogin'])->name('guard.login');
+Route::post('/guard/login', [AuthController::class, 'loginGuard'])->name('guard.login.submit');
+Route::get('/guard/dashboard', [AuthController::class, 'guardDashboard'])->name('guard.dashboard');
 
 // Admin routes
-Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.login');
-Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-Route::get('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+//Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.login');
+//Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
+//Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+//Route::get('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+Route::get('/admin/login', [AuthController::class, 'showAdminLogin'])->name('admin.login');
+Route::post('/admin/login', [AuthController::class, 'loginAdmin'])->name('admin.login.submit');
+Route::get('/admin/dashboard', [AuthController::class, 'adminDashboard'])->name('admin.dashboard');
+Route::get('/admin/logout', [AuthController::class, 'logoutAdmin'])->name('admin.logout');
 
 // Manage students
 Route::get('/admin/students', [AdminController::class, 'students'])->name('admin.students');
@@ -42,4 +50,5 @@ Route::post('/guard/add', [GuardController::class, 'addViolation'])->name('guard
 Route::post('/guard/fetch-student', [GuardController::class, 'fetchStudent'])->name('guard.fetchStudent');
 
 // Search student (form POST)
-Route::post('/guard/search', [GuardController::class, 'searchStudent'])->name('guard.searchStudent');
+//Route::post('/guard/search', [GuardController::class, 'searchStudent'])->name('guard.searchStudent');
+Route::post('/guard/search', [App\Http\Controllers\GuardController::class, 'fetchStudent'])->name('guard.searchStudent');

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class UserRole extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -17,10 +17,12 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    protected $connection = 'mysql_ROLE';
+    protected $table = "user_roletbl";
+    protected $primaryKey = 'role_id';
     protected $fillable = [
-        'name',
-        'email',
         'password',
+        'role',
     ];
 
     /**
@@ -30,7 +32,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
+        'pass_reset_token',
     ];
 
     /**
@@ -41,7 +43,6 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }

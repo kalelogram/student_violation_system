@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use function Laravel\Prompts\note;
 
 return new class extends Migration
 {
@@ -11,18 +12,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::connection('mysql_STUDENT')->create('students', function (Blueprint $table) {
-            $table->id('student_no');
+        Schema::connection('mysql')->create('studenttbl', function (Blueprint $table) {
+            $table->Id('student_no');
             $table->string('first_name');
             $table->string('middle_initial');
             $table->string('last_name');
-            $table->char('sex');
-            $table->integer('age');
             $table->string('program');
             $table->string('year_lvl');
-            $table->string('parent_contact_no', 11);
+            $table->string('parent_contact_no', 11);           
             
-
         });
     }
 
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('students');
+        Schema::dropIfExists('studenttbl');
     }
 };

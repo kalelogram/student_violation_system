@@ -16,16 +16,16 @@
   <table>
     <thead>
       <tr>
-        <th>Student ID</th>
-        <th>Violations</th>
+        <th>Student No</th>
+        <th>Violation</th>
         <th>Date</th>
       </tr>
     </thead>
     <tbody>
       @foreach($violations as $v)
       <tr @if($loop->iteration % 3 == 0) class="offense3" @endif>
-        <td>{{ $v->student_id }}</td>
-        <td>{{ $v->violations }}</td>
+        <td>{{ $v->student_no }}</td>
+        <td>{{ $v->violation }}</td>
         <td>{{ $v->created_at }}</td>
       </tr>
       @endforeach

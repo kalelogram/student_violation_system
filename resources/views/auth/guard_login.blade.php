@@ -82,16 +82,14 @@
 </head>
 
 <body>
-  <form method="POST" action="{{ route('guard.login.post') }}" class="container">
-    @csrf
-    <h2>Guard Login</h2>
-
-    @if (session('error'))
-      <p class="error">{{ session('error') }}</p>
-    @endif
-
-    <input type="password" name="password" placeholder="Enter password..." required>
-    <button type="submit">Login</button>
+   <form method="POST" action="{{ route('guard.login.submit') }}">
+      @csrf
+      <h2>Guard Login</h2>
+      <input type="password" name="password" placeholder="Enter password..." required>
+      <button type="submit">Login</button>
   </form>
+  @if(session('error'))
+      <p style="color:red;">{{ session('error') }}</p>
+  @endif
 </body>
 </html>
