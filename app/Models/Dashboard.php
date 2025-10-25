@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Student;
 use App\Models\Violation;
-use App\Models\User;
-use App\Models\Log;
+use App\Models\UserRole;
 
 class Dashboard extends Model
 {
@@ -20,10 +19,9 @@ class Dashboard extends Model
     public static function getDashboardStats()
     {
         return [
-            'students' => Student::count(),
-            'violations' => Violation::count(),
-            'users' => User::count(),
-            'logs' => Log::count(),
+            'studenttbl' => Student::count(),
+            'violationtbl' => Violation::count(),
+            'users' => UserRole::count(),
         ];
     }
 }

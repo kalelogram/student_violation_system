@@ -94,11 +94,11 @@
         <div class="card p-4 shadow-sm">
           <h5 class="fw-semibold mb-3 text-center">Student Information</h5>
 
-          <form method="POST" action="{{ route('guard.searchStudent') }}">
+          <form method="POST" action="{{ route('guard.fetchStudent') }}">
             @csrf
             <div class="mb-3">
-              <label for="student_id" class="form-label">Student Number</label>
-              <input type="text" class="form-control" id="student_id" name="student_id" required>
+              <label for="student_no" class="form-label">Student Number</label>
+              <input type="text" class="form-control" id="student_no" name="student_no" required>
             </div>
             <button type="submit" class="btn btn-primary w-100 mb-3">Search</button>
           </form>
@@ -108,8 +108,8 @@
             <p><strong>First Name:</strong> {{ $student->fname }}</p>
             <p><strong>Middle Name:</strong> {{ $student->mname }}</p>
             <p><strong>Last Name:</strong> {{ $student->lname }}</p>
-            <p><strong>Course:</strong> {{ $student->course }}</p>
-            <p><strong>Year:</strong> {{ $student->year }}</p>
+            <p><strong>Course:</strong> {{ $student->program }}</p>
+            <p><strong>Year:</strong> {{ $student->year_lvl }}</p>
 
             <form method="POST" action="{{ route('guard.addViolation') }}">
               @csrf
@@ -138,7 +138,7 @@
           <div class="logs">
             @foreach($todayViolations as $log)
               <div class="log-item">
-                <p>{{ $loop->iteration }}. {{ $log->student_id }} — {{ $log->fname }} {{ $log->lname }}, {{ $log->course }} {{ $log->year }}</p>
+                <p>{{ $loop->iteration }}. {{ $log->student_no }} — {{ $log->fname }} {{ $log->lname }}, {{ $log->program }} {{ $log->year_lvl }}</p>
                 <p class="log-violation">Violation: {{ $log->violation }}</p>
                 <p class="log-time">{{ $log->created_at->format('h:i A') }}</p>
               </div>

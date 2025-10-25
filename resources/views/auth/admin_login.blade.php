@@ -80,14 +80,14 @@
   </style>
 </head>
 <body>
-  <h2>Admin Login</h2>
-  @if(session('error'))
-    <p style="color:red;">{{ session('error') }}</p>
-  @endif
-  <form method="POST" action="{{ route('admin.login.post') }}">
-    @csrf
-    <input type="password" name="password" placeholder="Enter admin password">
-    <button type="submit">Login</button>
+  <form method="POST" action="{{ route('admin.login.submit') }}">
+      @csrf
+      <h2>Admin Login</h2>
+      <input type="password" name="password" placeholder="Enter password..." required>
+      <button type="submit">Login</button>
   </form>
+  @if(session('error'))
+      <p style="color:red;">{{ session('error') }}</p>
+  @endif
 </body>
 </html>

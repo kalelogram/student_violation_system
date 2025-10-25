@@ -4,22 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Student;
 
 class Violation extends Model
 {
     use HasFactory;
+    //
+    protected $connection = 'mysql';
+    protected $table = 'violationtbl';
+    protected $primaryKey = 'violation_id';
+    protected $fillable = [ 'student_no', 
+                            'violation', 
+                            'description', 
+                            'remarks'
+                          ];  
+                             
 
-    protected $fillable = [
-        'student_id',
-        'violations',
-    ];
-
-    // Relation to Student (assumes students.student_id is the student number)
+    // A violation belongs to a student
     public function student()
     {
-        // If your violations.student_id stores the student's student_id string (not the students.id),
-        // adjust the foreignKey/localKey accordingly. This uses student's `student_id` column:
-        return $this->belongsTo(Student::class, 'student_id', 'student_id');
+        return $this->belongsTo(Student::class, 'student_no', 'student_no');
     }
 }
+ 

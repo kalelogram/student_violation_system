@@ -74,12 +74,13 @@
 </head>
 
 <body>
-  <form method="POST" action="{{ route('select-role') }}" class="container">
-    @csrf
-    <h2>Welcome to PRMSU Gate System</h2>
-    <button type="submit" name="role" value="admin" class="role-btn">Admin</button>
-    <button type="submit" name="role" value="guard" class="role-btn">Guard</button>
-    <p class="footer">President Ramon Magsaysay State University</p>
-  </form>
+  <div class="login-selection">
+    <h2>Welcome to PRMSU Student Violation Record System</h2>
+
+    <a href="{{ route('admin.login') }}" class="btn btn-primary">Admin</a>
+    <a href="{{ route('guard.login') }}" class="btn btn-secondary">Guard</a>
+
+    <p>President Ramon Magsaysay State University</p>
+</div>
 </body>
 </html>
