@@ -19,7 +19,7 @@ class AuthController extends Controller
 
         // Fetch password from user_role_db
         $dbPassword = DB::connection('mysql_ROLE')
-                        ->table('user_roletbl')
+                        ->table('userrole_tbl')
                         ->where('role_id', '1')
                         ->value('password');
 
@@ -50,7 +50,7 @@ class AuthController extends Controller
         $password = $request->input('password');
 
         $dbPassword = DB::connection('mysql_ROLE')
-                        ->table('user_roletbl')
+                        ->table('userrole_tbl')
                         ->where('role_id', '2')
                         ->value('password');
 

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::connection('mysql_ROLE')->create('user_roletbl', function (Blueprint $table) {
             $table->id('role_id');
             $table->string('password');
-            $table->string('pass_reset_token');
 
         });
     }
