@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login Selection | PRMSU Gate System</title>
+  <title>Login Selection | PRMSU Student Violation Record System</title>
   <style>
     * {
       margin: 0;
@@ -41,6 +41,7 @@
     .role-btn {
       display: block;
       width: 100%;
+      text-align: center;
       background: white;
       color: #004aad;
       border: none;
@@ -49,13 +50,14 @@
       margin: 10px 0;
       font-size: 1rem;
       font-weight: 600;
+      text-decoration: none;
       cursor: pointer;
       transition: all 0.3s ease;
     }
 
     .role-btn:hover {
       transform: scale(1.05);
-      background: #ffa200ff;
+      background: #ff8c00ff;
       color: white;
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
@@ -69,16 +71,17 @@
       margin-top: 15px;
       font-size: 0.85rem;
       opacity: 0.8;
+      
     }
   </style>
 </head>
 
 <body>
-  <div class="login-selection">
+  <div class="container">
     <h2>Welcome to PRMSU Student Violation Record System</h2>
 
-    <a href="{{ route('admin.login') }}" class="btn btn-primary">Admin</a>
-    <a href="{{ route('guard.login') }}" class="btn btn-secondary">Guard</a>
+    <a href="{{ route('admin.login') }}" class="role-btn">Admin</a>
+    <a href="{{ route('guard.login') }}" class="role-btn">Guard</a>
 
     <p>President Ramon Magsaysay State University</p>
 </div>

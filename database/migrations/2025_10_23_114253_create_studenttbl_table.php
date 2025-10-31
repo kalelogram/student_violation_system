@@ -3,32 +3,49 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use function Laravel\Prompts\note;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::connection('mysql')->create('studenttbl', function (Blueprint $table) {
-            $table->Id('student_no');
+            $table->engine = 'InnoDB';
+            
+            // Add auto-increment student_id as primary key FIRST
+            $table->id('student_id');
+            
+            // Student number (from student_db)
+            $table->string('student_no', 11);
+            
+            // Foreign key to violationtbl
+            $table->unsignedBigInteger('violation_id');
+            
+            // Student data (fetched from student_db when violation is recorded)
             $table->string('first_name');
-            $table->string('middle_initial');
+            $table->char('middle_initial');
             $table->string('last_name');
             $table->string('program');
-            $table->string('year_lvl');
-            $table->string('parent_contact_no', 11);           
+            $table->integer('year_lvl');
+            $table->string('parent_contact_no', 11);
             
+            $table->timestamps();
+            
+            // Foreign key constraint
+            $table->foreign('violation_id')
+                ->references('violation_id')
+                ->on('violationtbl')
+                ->onDelete('cascade');
+            
+            // Unique constraint to prevent duplicate student_no + violation_id combinations
+            $table->unique(['student_no', 'violation_id'], 'student_violation_unique');
+            
+            // Index for better performance
+            $table->index('student_no');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('studenttbl');
+        Schema::connection('mysql')->dropIfExists('studenttbl');
     }
 };

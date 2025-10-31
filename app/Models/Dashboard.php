@@ -21,7 +21,7 @@ class Dashboard extends Model
         return [
             'studenttbl' => Student::count(),
             'violationtbl' => Violation::count(),
-            'users' => UserRole::count(),
+            'userrole_tbl' => UserRole::count(),
         ];
     }
 }
