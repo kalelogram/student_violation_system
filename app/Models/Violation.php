@@ -8,21 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class Violation extends Model
 {
     use HasFactory;
-    //
+    
     protected $connection = 'mysql';
     protected $table = 'violationtbl';
     protected $primaryKey = 'violation_id';
-    protected $fillable = [ 'student_no', 
-                            'violation', 
-                            'description', 
-                            'remarks'
-                          ];  
-                             
+    protected $fillable = [ 
+        'violation', 
+        'description', 
+        'remarks',
+        'photo_path'
+    ];  
 
-    // A violation belongs to a student
-    public function student()
-    {
-        return $this->belongsTo(Student::class, 'student_no', 'student_no');
-    }
+    // REMOVE the student relationship - it doesn't work across databases
+    // public function student()
+    // {
+    //     return $this->belongsTo(Student::class, 'student_no', 'student_no');
+    // }
 }
- 

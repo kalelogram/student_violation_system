@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Student;
+use App\Models\Violation;
 
 class AuthController extends Controller
 {
@@ -19,7 +21,7 @@ class AuthController extends Controller
 
         // Fetch password from user_role_db
         $dbPassword = DB::connection('mysql_ROLE')
-                        ->table('userrole_tbl')
+                        ->table('user_roletbl')
                         ->where('role_id', '1')
                         ->value('password');
 
@@ -50,7 +52,7 @@ class AuthController extends Controller
         $password = $request->input('password');
 
         $dbPassword = DB::connection('mysql_ROLE')
-                        ->table('userrole_tbl')
+                        ->table('user_roletbl')
                         ->where('role_id', '2')
                         ->value('password');
 
@@ -63,28 +65,48 @@ class AuthController extends Controller
 
     public function guardDashboard()
     {
-        $violations = DB::connection('mysql')
-        ->table('violationtbl')
-        ->join('studenttbl', 'violationtbl.student_no', '=', 'studenttbl.student_no')
-        ->select(
-            'violationtbl.*',
-            'studenttbl.first_name as fname',
-            'studenttbl.last_name as lname',
-            'studenttbl.program',
-            'studenttbl.year_lvl'
-        )
-        ->whereDate('violationtbl.created_at', now()->toDateString())
-        ->orderBy('violationtbl.created_at', 'desc')
-        ->get();
 
-    return view('guard.dashboard', [
-        'todayViolations' => $violations
+        // Initialize all required variables
+        $student = null;
+        $violations = collect();
+        $searchPerformed = false;
+
+        // Get today's violations for the logs section using raw query
+        $todayViolations = DB::connection('mysql')
+            ->table('violationtbl')
+            ->join('students', 'violationtbl.student_no', '=', 'students.student_no')
+            ->select(
+                'violationtbl.student_no',
+                'students.first_name as first_name',
+                'students.last_name as last_name',
+                'students.program',
+                'students.year_lvl',
+                'violationtbl.violation',
+                'violationtbl.photo_path',
+                'violationtbl.created_at'
+            )
+            ->whereDate('violationtbl.created_at', today())
+            ->orderBy('violationtbl.created_at', 'desc')
+            ->get();
+
+        // Convert created_at to Carbon objects for proper formatting
+        $todayViolations = $todayViolations->map(function ($log) {
+        $log->created_at = \Carbon\Carbon::parse($log->created_at);
+        return $log;
+
+    });
+    
+        return view('guard.dashboard', [
+            'student' => $student,
+            'violations' => $violations,
+            'todayViolations' => $todayViolations,
+            'searchPerformed' => $searchPerformed
     ]);
     }
 
     public function logoutAdmin()
-{
+    {
     return redirect('/admin/login');
-}
+    }
 
 }

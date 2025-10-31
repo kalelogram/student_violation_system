@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     use HasFactory;
+    
     protected $connection = 'mysql_STUDENT';
     protected $table = "students";
     protected $primaryKey = 'student_no';
@@ -25,9 +26,9 @@ class Student extends Model
         'parent_contact_no',
     ];
 
-    // One student can have many violations
-    public function violations()
-    {
-        return $this->hasMany(Violation::class, 'student_no', 'student_no');
-    }
+    // REMOVE the violations relationship - it doesn't work across databases
+    // public function violations()
+    // {
+    //     return $this->hasMany(Violation::class, 'student_no', 'student_no');
+    // }
 }

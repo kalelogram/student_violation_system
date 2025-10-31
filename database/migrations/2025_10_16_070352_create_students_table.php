@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::connection('mysql_STUDENT')->create('students', function (Blueprint $table) {
-            $table->id('student_no');
+            $table->string('student_no', 11)->primary();
             $table->string('first_name');
             $table->string('middle_initial');
             $table->string('last_name');
