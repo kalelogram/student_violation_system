@@ -97,30 +97,6 @@ class GuardController extends Controller
                     throw new \Exception('Student not found in database.');
                 }
 
-                // First, ensure the student exists in the local mysql students table
-                $localStudentExists = DB::connection('mysql')
-                    ->table('students')
-                    ->where('student_no', $studentNo)
-                    ->exists();
-
-                if (!$localStudentExists) {
-                    // Insert the student into the local students table to satisfy foreign key
-                    DB::connection('mysql')
-                        ->table('students')
-                        ->insert([
-                            'student_no' => $student->student_no,
-                            'first_name' => $student->first_name,
-                            'middle_initial' => $student->middle_initial,
-                            'last_name' => $student->last_name,
-                            'sex' => $student->sex,
-                            'age' => $student->age,
-                            'program' => $student->program,
-                            'year_lvl' => $student->year_lvl,
-                            'parent_contact_no' => $student->parent_contact_no,
-                            'created_at' => now(),
-                            'updated_at' => now()
-                        ]);
-                }
 
                 // Count existing violations for this student from violationtbl
                 $violationCount = DB::connection('mysql')
