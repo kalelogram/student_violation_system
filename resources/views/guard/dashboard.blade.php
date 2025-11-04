@@ -203,16 +203,9 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Upload Photo 
-                                    <!--@if(isset($violations) && $violations->count() > 0)
-                                        <span class="text-muted">(Disabled - Student has violation history)</span>
-                                    @endif-->
-                                </label>
+                                <label class="form-label">Upload Photo </label>
                                 <input type="file" name="photo" class="form-control" accept="image/*" 
                                     @if(isset($violations) && $violations->count() > 0) disabled @endif>
-                                <!--@if(isset($violations) && $violations->count() > 0)
-                                    <small class="text-muted"></small>HAHAHA bawal na!.</small>
-                                @endif-->
                             </div>
 
                             <button type="submit" class="btn btn-success w-100">Record Violation</button>

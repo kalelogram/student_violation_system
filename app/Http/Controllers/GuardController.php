@@ -17,23 +17,22 @@ class GuardController extends Controller
         $searchPerformed = true;
 
         // Get student from student_db (mysql_STUDENT)
-        $student = Student::where('student_no', $studentNo)->first();
+        $student = Student::on('mysql_STUDENT')->where('student_no', $studentNo)->first();
 
         if ($student) {
-            // Get violation history using raw query (cross-database)
+            // Get violation history directly from violationtbl (FIXED)
             $violations = DB::connection('mysql')
-                ->table('studenttbl')
-                ->join('violationtbl', 'studenttbl.violation_id', '=', 'violationtbl.violation_id')
-                ->where('studenttbl.student_no', $studentNo)
+                ->table('violationtbl')
+                ->where('student_no', $studentNo)
                 ->select(
-                    'violationtbl.violation_id',
-                    'violationtbl.violation',
-                    'violationtbl.description',
-                    'violationtbl.remarks',
-                    'violationtbl.photo_path',
-                    'violationtbl.created_at'
+                    'violation_id',
+                    'violation',
+                    'description',
+                    'remarks',
+                    'photo_path',
+                    'created_at'
                 )
-                ->orderBy('violationtbl.created_at', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->get();
 
             // Convert created_at to Carbon objects
@@ -43,15 +42,17 @@ class GuardController extends Controller
             });
         }
 
-        // Get today's violations using raw query (cross-database)
+        // ✅ Fix the JOIN to reference the correct database for students
+        $studentDB = DB::connection('mysql_STUDENT')->getDatabaseName();
+
+        // Get today's violations (FIXED - use students table instead of studenttbl)
         $todayViolations = DB::connection('mysql')
-            ->table('studenttbl')
-            ->join('violationtbl', 'studenttbl.violation_id', '=', 'violationtbl.violation_id')
-            ->join('mysql_STUDENT.students', 'studenttbl.student_no', '=', 'students.student_no')
+            ->table('violationtbl')
+            ->join("$studentDB.students as students", 'violationtbl.student_no', '=', 'students.student_no')
             ->select(
-                'studenttbl.student_no',
-                'students.first_name as fname',
-                'students.last_name as lname',
+                'violationtbl.student_no',
+                'students.first_name',
+                'students.last_name',
                 'students.program',
                 'students.year_lvl',
                 'violationtbl.violation',
@@ -89,16 +90,17 @@ class GuardController extends Controller
             DB::connection('mysql')->transaction(function () use ($request) {
                 $studentNo = $request->student_no;
                 
-                // Check if student exists in student_db and GET THEIR DATA
-                $student = Student::where('student_no', $studentNo)->first();
+                // Check if student exists in student_db (mysql_STUDENT)
+                $student = Student::on('mysql_STUDENT')->where('student_no', $studentNo)->first();
                 
                 if (!$student) {
                     throw new \Exception('Student not found in database.');
                 }
 
-                // Count existing violations for this student
+
+                // Count existing violations for this student from violationtbl
                 $violationCount = DB::connection('mysql')
-                    ->table('studenttbl')
+                    ->table('violationtbl')
                     ->where('student_no', $studentNo)
                     ->count();
 
@@ -117,10 +119,11 @@ class GuardController extends Controller
                     }
                 }
 
-                // 1. Create violation record in violationtbl
-                $violationId = DB::connection('mysql')
+                // Create violation record in violationtbl
+                DB::connection('mysql')
                     ->table('violationtbl')
-                    ->insertGetId([
+                    ->insert([
+                        'student_no' => $studentNo,
                         'violation' => $request->violation,
                         'description' => $request->description,
                         'remarks' => $remarks,
@@ -129,21 +132,28 @@ class GuardController extends Controller
                         'updated_at' => now()
                     ]);
 
-                // 2. Create record in studenttbl WITH STUDENT DATA
-                DB::connection('mysql')
+                // Check if student already exists in studenttbl
+                $studentExistsInTbl = DB::connection('mysql')
                     ->table('studenttbl')
-                    ->insert([
-                        'student_no' => $student->student_no,
-                        'violation_id' => $violationId,
-                        'first_name' => $student->first_name,
-                        'middle_initial' => $student->middle_initial,
-                        'last_name' => $student->last_name,
-                        'program' => $student->program,
-                        'year_lvl' => $student->year_lvl,
-                        'parent_contact_no' => $student->parent_contact_no,
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ]);
+                    ->where('student_no', $studentNo)
+                    ->exists();
+
+                if (!$studentExistsInTbl) {
+                    // Insert student data without violation_id (since we removed it)
+                    DB::connection('mysql')
+                        ->table('studenttbl')
+                        ->insert([
+                            'student_no' => $student->student_no,
+                            'first_name' => $student->first_name,
+                            'middle_initial' => $student->middle_initial,
+                            'last_name' => $student->last_name,
+                            'program' => $student->program,
+                            'year_lvl' => $student->year_lvl,
+                            'parent_contact_no' => $student->parent_contact_no,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                }
             });
 
             return redirect()->route('guard.dashboard')->with('success', 'Violation recorded successfully!');

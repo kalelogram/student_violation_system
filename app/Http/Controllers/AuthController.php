@@ -74,13 +74,13 @@ class AuthController extends Controller
         // Get today's violations for the logs section using raw query
         $todayViolations = DB::connection('mysql')
             ->table('violationtbl')
-            ->join('students', 'violationtbl.student_no', '=', 'students.student_no')
+            ->join('student_db.students', 'violationtbl.student_no', '=', 'student_db.students.student_no')
             ->select(
                 'violationtbl.student_no',
-                'students.first_name as first_name',
-                'students.last_name as last_name',
-                'students.program',
-                'students.year_lvl',
+                'student_db.students.first_name as first_name',
+                'student_db.students.last_name as last_name',
+                'student_db.students.program',
+                'student_db.students.year_lvl',
                 'violationtbl.violation',
                 'violationtbl.photo_path',
                 'violationtbl.created_at'

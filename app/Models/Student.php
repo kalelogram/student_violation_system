@@ -27,8 +27,8 @@ class Student extends Model
     ];
 
     // REMOVE the violations relationship - it doesn't work across databases
-    // public function violations()
-    // {
-    //     return $this->hasMany(Violation::class, 'student_no', 'student_no');
-    // }
+     public function violations()
+     {
+         return $this->hasMany(Violation::class, 'student_no', 'student_no');
+     }
 }
