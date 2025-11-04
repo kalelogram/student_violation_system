@@ -18,15 +18,15 @@ return new class extends Migration
             $table->string('student_no', 11);
             
             // Foreign key to violationtbl
-            $table->unsignedBigInteger('violation_id');
+            $table->unsignedBigInteger('violation_id')->nullable();
             
             // Student data (fetched from student_db when violation is recorded)
             $table->string('first_name');
-            $table->char('middle_initial');
+            $table->char('middle_initial')->nullable();
             $table->string('last_name');
             $table->string('program');
             $table->integer('year_lvl');
-            $table->string('parent_contact_no', 11);
+            $table->string('parent_contact_no', 11)->nullable();
             
             $table->timestamps();
             
@@ -39,8 +39,6 @@ return new class extends Migration
             // Unique constraint to prevent duplicate student_no + violation_id combinations
             $table->unique(['student_no', 'violation_id'], 'student_violation_unique');
             
-            // Index for better performance
-            $table->index('student_no');
         });
     }
 
