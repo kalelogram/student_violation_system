@@ -28,7 +28,6 @@ Route::post('/guard/add-violation', [GuardController::class, 'addViolation'])->n
 Route::get('/admin/login', [AuthController::class, 'showAdminLogin'])->name('admin.login');
 Route::post('/admin/login', [AuthController::class, 'loginAdmin'])->name('admin.login.submit');
 Route::get('/admin/dashboard', [AuthController::class, 'adminDashboard'])->name('admin.dashboard');
-Route::get('/admin/logout', [AuthController::class, 'logoutAdmin'])->name('admin.logout');
 
 // Manage students
 Route::get('/admin/students', [AdminController::class, 'students'])->name('admin.students');
@@ -48,8 +47,8 @@ Route::post('/guard/fetch-student', [GuardController::class, 'fetchStudent'])->n
 //Route::post('/guard/search', [GuardController::class, 'searchStudent'])->name('guard.searchStudent');
 Route::post('/guard/search', [App\Http\Controllers\GuardController::class, 'fetchStudent'])->name('guard.searchStudent');
 
-
-
+// Logout to index route
+Route::get('/admin/logout', [AuthController::class, 'logoutForm'])->name('form.logout');
 
 
 

@@ -32,6 +32,14 @@
       animation: fadeIn 1s ease;
     }
 
+    .logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+
     h2 {
       margin-bottom: 25px;
       font-size: 1.6rem;
@@ -77,13 +85,18 @@
 </head>
 
 <body>
+  
   <div class="container">
-    <h2>Welcome to PRMSU Student Violation Record System</h2>
+    <div class="PRMSU_logo">
+      <img src="{{ asset('logo.png') }}" alt="System Logo" class="logo">
 
-    <a href="{{ route('admin.login') }}" class="role-btn">Admin</a>
-    <a href="{{ route('guard.login') }}" class="role-btn">Guard</a>
+    </div>
+        <h2>Welcome to PRMSU Student Violation Record System</h2>
 
-    <p>President Ramon Magsaysay State University</p>
-</div>
+        <a href="{{ route('admin.login') }}" class="role-btn">Admin</a>
+        <a href="{{ route('guard.login') }}" class="role-btn">Guard</a>
+
+        <p>President Ramon Magsaysay State University, Iba campus</p>
+  </div>
 </body>
 </html>

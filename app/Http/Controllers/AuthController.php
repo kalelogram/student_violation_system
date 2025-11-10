@@ -104,9 +104,8 @@ class AuthController extends Controller
     ]);
     }
 
-    public function logoutAdmin()
+    public function logoutForm()
     {
-    return redirect('/admin/login');
+    return redirect('http://localhost:8000/');
     }
-
 }
