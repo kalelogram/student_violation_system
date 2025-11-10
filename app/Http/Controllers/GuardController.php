@@ -16,11 +16,11 @@ class GuardController extends Controller
         $violations = collect();
         $searchPerformed = true;
 
-        // Get student from student_db (mysql_STUDENT)
+        // Get student from student_db
         $student = Student::on('mysql_STUDENT')->where('student_no', $studentNo)->first();
 
         if ($student) {
-            // Get violation history directly from violationtbl (FIXED)
+            // Get violation history directly from violationtbl
             $violations = DB::connection('mysql')
                 ->table('violationtbl')
                 ->where('student_no', $studentNo)
@@ -35,17 +35,15 @@ class GuardController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-            // Convert created_at to Carbon objects
             $violations = $violations->map(function ($violation) {
                 $violation->created_at = \Carbon\Carbon::parse($violation->created_at);
                 return $violation;
             });
         }
 
-        // ✅ Fix the JOIN to reference the correct database for students
         $studentDB = DB::connection('mysql_STUDENT')->getDatabaseName();
 
-        // Get today's violations (FIXED - use students table instead of studenttbl)
+        // Get today's violations
         $todayViolations = DB::connection('mysql')
             ->table('violationtbl')
             ->join("$studentDB.students as students", 'violationtbl.student_no', '=', 'students.student_no')
@@ -139,7 +137,7 @@ class GuardController extends Controller
                     ->exists();
 
                 if (!$studentExistsInTbl) {
-                    // Insert student data without violation_id (since we removed it)
+                    // Insert student data without violation_id
                     DB::connection('mysql')
                         ->table('studenttbl')
                         ->insert([
