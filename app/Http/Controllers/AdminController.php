@@ -9,8 +9,10 @@ class AdminController extends Controller
 {
     public function showLogin()
     {
-        return view('adminlogin');
+        return view('auth.admin_login'); // ← adjust view name if your file is "admin_login.blade.php"
     }
+
+    // You can add your other admin functions below (e.g. dashboard, logout, etc.)
 
     public function login(Request $request)
     {
@@ -24,23 +26,67 @@ class AdminController extends Controller
         return back()->with('error', 'Incorrect password');
     }
 
-    public function dashboard()
-    {
-        if (!session('admin_logged_in')) {
-            return redirect()->route('admin.login');
-        }
-
-        // Get ALL violations (full history)
-        $violations = Violation::orderByDesc('created_at')->get();
-
-        return view('admindashboard', compact('violations'));
+    public function dashboard(Request $request)
+{
+    if (!session('admin_logged_in')) {
+        return redirect()->route('admin.login');
     }
+
+    // Get paginated violations
+    $violations = \App\Models\Violation::orderByDesc('created_at')->paginate(10);
+
+    // Get stats for summary cards
+    $totalViolations = \App\Models\Violation::count();
+    $todayViolations = \App\Models\Violation::whereDate('created_at', today())->count();
+
+    return view('admindashboard', compact('violations', 'totalViolations', 'todayViolations'));
+}
 
     public function logout()
     {
         session()->forget('admin_logged_in');
         return redirect()->route('admin.login');
     }
+public function exportCSV()
+{
+    $violations = \App\Models\Violation::all();
+    $filename = "violations_" . now()->format('Y-m-d_His') . ".csv";
+
+    $headers = [
+        "Content-type" => "text/csv",
+        "Content-Disposition" => "attachment; filename=$filename",
+        "Pragma" => "no-cache",
+        "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+        "Expires" => "0"
+    ];
+
+    $columns = [
+        'Student No', 'Full Name', 'Program', 'Year Level', 'Violation', 
+        'Description', 'Remarks', 'Date & Time'
+    ];
+
+    $callback = function() use ($violations, $columns) {
+        $file = fopen('php://output', 'w');
+        fputcsv($file, $columns);
+
+        foreach ($violations as $v) {
+            fputcsv($file, [
+                $v->student_no,
+                $v->first_name . ' ' . $v->last_name,
+                $v->program,
+                $v->year_lvl,
+                $v->violation,
+                $v->description,
+                $v->remarks,
+                $v->created_at
+            ]);
+        }
+
+        fclose($file);
+    };
+
+    return response()->stream($callback, 200, $headers);
+}
 
     
 }

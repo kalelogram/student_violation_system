@@ -28,6 +28,8 @@ Route::post('/guard/add-violation', [GuardController::class, 'addViolation'])->n
 Route::get('/admin/login', [AuthController::class, 'showAdminLogin'])->name('admin.login');
 Route::post('/admin/login', [AuthController::class, 'loginAdmin'])->name('admin.login.submit');
 Route::get('/admin/dashboard', [AuthController::class, 'adminDashboard'])->name('admin.dashboard');
+Route::get('/admin/logout', [AuthController::class, 'logoutAdmin'])->name('admin.logout');
+Route::get('/admin/export-csv', [AdminController::class, 'exportCSV'])->name('admin.export.csv');
 
 // Manage students
 Route::get('/admin/students', [AdminController::class, 'students'])->name('admin.students');
@@ -36,6 +38,9 @@ Route::post('/admin/students/add', [AdminController::class, 'addStudent'])->name
 // Manage violations
 Route::get('/admin/violations', [AdminController::class, 'violations'])->name('admin.violations');
 Route::post('/admin/violations/add', [AdminController::class, 'addViolation'])->name('admin.violations.add');
+
+// Export violations (CSV)
+Route::get('/admin/exportCSV', [AdminController::class, 'exportCSV'])->name('admin.exportCSV');
 
 // Add violation record
 Route::post('/guard/add', [GuardController::class, 'addViolation'])->name('guard.add');
@@ -47,8 +52,8 @@ Route::post('/guard/fetch-student', [GuardController::class, 'fetchStudent'])->n
 //Route::post('/guard/search', [GuardController::class, 'searchStudent'])->name('guard.searchStudent');
 Route::post('/guard/search', [App\Http\Controllers\GuardController::class, 'fetchStudent'])->name('guard.searchStudent');
 
-// Logout to index route
-Route::get('/admin/logout', [AuthController::class, 'logoutForm'])->name('form.logout');
+
+
 
 
 
@@ -61,7 +66,7 @@ Route::get('/verify-fix', function() {
     foreach ($columns as $column) {
         echo "{$column->Field} ({$column->Type})<br>";
     }
-    
+        echo "";
     echo "<br>=== Testing duplicate prevention ===<br>";
     try {
         // Try to insert a duplicate
@@ -87,4 +92,6 @@ Route::get('/verify-fix', function() {
     
     // Clean up test data
     DB::connection('mysql')->table('studenttbl')->where('student_no', 'TEST-001')->delete();
+
+
 });

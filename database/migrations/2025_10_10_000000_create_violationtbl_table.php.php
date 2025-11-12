@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::connection('mysql')->create('violationtbl', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id('violation_id');
-            $table->string('student_no'); // 👈 THIS is important
+            $table->string('student_no'); // THIS is important
             $table->string('violation');
             $table->text('description')->nullable();
             $table->string('remarks')->nullable();
